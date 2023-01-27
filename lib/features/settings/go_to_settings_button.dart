@@ -1,4 +1,4 @@
-import 'package:efootball_stats_manager/features/settings/view.dart';
+import 'view.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
