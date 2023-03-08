@@ -1,6 +1,8 @@
 import 'package:efootball_stats_manager/features/settings/settings_bloc.dart';
 import 'package:efootball_stats_manager/features/user/logout_button__view.dart';
+import 'package:efootball_stats_manager/shared/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class SettingsPage extends ReactiveStatelessWidget {
@@ -18,13 +20,14 @@ class SettingsPage extends ReactiveStatelessWidget {
       ),
       body: ListView(
         children: [
+          const UserCardView(),
           const LogoutButtonView(),
           _buildCurrentSettingsView(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
               value: settingsBloc.themeMode,
-              items: ThemeMode.values
+              items: THEMES
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
@@ -39,7 +42,7 @@ class SettingsPage extends ReactiveStatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
               value: settingsBloc.materialColor,
-              items: Colors.primaries
+              items: COLORS
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
@@ -53,12 +56,12 @@ class SettingsPage extends ReactiveStatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
-              // value: settingsBloc.font,
-              items: <String>["Dosis", "DM Mono", "Comforta", "Fira"]
+              value: settingsBloc.font,
+              items: FONTS
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
-                      child: Text(e.toString()),
+                      child: Text(e.toString(), style: GoogleFonts.getFont(e)),
                     ),
                   )
                   .toList(),
@@ -69,7 +72,7 @@ class SettingsPage extends ReactiveStatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
               value: settingsBloc.padding,
-              items: <double>[4, 8, 12, 16]
+              items: PADDINGS
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
@@ -86,7 +89,7 @@ class SettingsPage extends ReactiveStatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
               value: settingsBloc.border,
-              items: <double>[4, 8, 12, 16, 32]
+              items: BORDERS
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,

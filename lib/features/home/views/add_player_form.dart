@@ -19,10 +19,10 @@ class AddPlayerFormWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: home.nameTextEdit.controller,
+                controller: homeBloc.nameTextEdit.controller,
                 decoration: InputDecoration(
                   labelText: 'Player Name',
-                  errorText: home.nameTextEdit.error,
+                  errorText: homeBloc.nameTextEdit.error,
                 ),
               ),
             ),
@@ -32,10 +32,10 @@ class AddPlayerFormWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: home.goalTextEdit.controller,
+                controller: homeBloc.goalTextEdit.controller,
                 decoration: InputDecoration(
                   labelText: 'Goals',
-                  errorText: home.goalTextEdit.error,
+                  errorText: homeBloc.goalTextEdit.error,
                 ),
               ),
             ),
@@ -46,7 +46,7 @@ class AddPlayerFormWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(minimumSize: const Size(10, 60)),
-                onPressed: home.valid ? home.playerForm.submit : null,
+                onPressed: homeBloc.valid ? homeBloc.playerForm.submit : null,
                 child: const Icon(Icons.add),
               ),
             ),

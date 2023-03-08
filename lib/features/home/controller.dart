@@ -1,22 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:efootball_stats_manager/features/home/interface.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import 'models/player.dart';
 import 'models/players.dart';
-import 'repository.dart';
 
-@immutable // BLOC
 class HomeBloc {
-  final PlayerInterface repo;
-
-  HomeBloc({
-    required this.repo,
-  });
-
-  late final _playersRM = RM.inject<Players>(() => repo.players, sideEffects: SideEffects(onSetState: (p0) => repo.players = p0.state));
+  late final _playersRM = RM.inject<Players>(
+    () => Players.init,
+    persist: () => PersistState(
+      key: 'players',
+      toJson: (s) => s.toJson(),
+      fromJson: (json) => Players.fromJson(json),
+    ),
+  );
 
   Set<Player> get players => _players.players;
 
@@ -51,25 +49,21 @@ class HomeBloc {
     }
   ]);
   final statusFormField = RM.injectFormField<Status>(Status.common);
-  void changeStatus(Player player) {
-    _players = _players.copyWith(players: {
-      ...players,
-      for (var eachPlayer in players)
-        if (eachPlayer == player)
-          eachPlayer.copyWith(
-            status: statusFormField.value,
-          )
-    });
-    _players = _players;
+  void increment(Player player) => modifyGoals(player, 1);
+  void decrement(Player player) => modifyGoals(player, -1);
+
+  void modifyGoals(Player player, int goals) {
+    _players = _players.copyWith(
+      players: Set.from({
+        for (var eachPlayer in players)
+          if (eachPlayer == player) player.copyWith(goals: player.goals + goals)
+      }),
+    );
   }
 }
 
 // DEPENDENCY INJECTION
-final HomeBloc home = HomeBloc(
-  repo: PlayerRepository(),
-);
-final playerInterfaceRM = RM.inject<PlayerInterface>(() => PlayerRepository());
-PlayerInterface get playerInterface => playerInterfaceRM.state;
+final HomeBloc homeBloc = HomeBloc();
 
 enum Status {
   common,
