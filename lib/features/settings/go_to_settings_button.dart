@@ -1,6 +1,7 @@
+import 'package:efootball_stats_manager/navigator.dart';
+
 import 'view.dart';
 import 'package:flutter/material.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
 
 class GotoSettingsPageButton extends StatelessWidget {
   const GotoSettingsPageButton({super.key});
@@ -8,7 +9,7 @@ class GotoSettingsPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => RM.navigate.to(const SettingsPage()),
+      onPressed: () => navigator.toPageless(const SettingsPage()),
       icon: const Icon(
         Icons.settings,
       ),

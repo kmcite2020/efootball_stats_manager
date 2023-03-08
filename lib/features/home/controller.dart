@@ -1,104 +1,80 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:efootball_stats_manager/features/home/interface.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import 'models.dart';
+import 'models/player.dart';
+import 'models/players.dart';
 import 'repository.dart';
 
-@immutable
+@immutable // BLOC
 class HomeBloc {
-  HomeBloc({required this.playerRepo});
-  final PlayerRepository playerRepo;
+  final PlayerInterface repo;
 
-  late final playersRM = RM.injectFuture<List<Player>>(() => playerRepo.getPlayers());
-  // Future<void> addPlayer(Player player) async {
-  //   playersRM.state = [
-  //     ...playersRM.state,
-  //     Player(
-  //       name: nameTextEdit.text,
-  //       goals: int.parse(goalTextEdit.text),
-  //     )
-  //   ];
-  //   await playerRepo.addPlayer(player);
-  // }
-
-  final List<Player> initialList = [];
-
-  late final homeStateRM = RM.inject<HomeState>(
-    () => const HomeState(
-      homeStatus: HomeStatus.loading,
-      listOfPlayers: [],
-    ),
-  );
-  List<Player> get players => homeStateRM.state.listOfPlayers;
-  HomeState get homeState => homeStateRM.state;
-
-  /// events
-  void playersLoadedEvent() async {
-    homeStateRM.state = HomeState(
-      homeStatus: HomeStatus.loaded,
-      listOfPlayers: await playerRepo.getPlayers(),
-    );
-  }
-
-  void playerAddedEvent(String name, int goals) {
-    homeStateRM.state = homeState.copyWith(homeStatus: HomeStatus.loading);
-    var temp = [
-      ...players,
-      Player(name: name, goals: goals),
-    ];
-    homeStateRM.state = homeState.copyWith(homeStatus: HomeStatus.loaded, listOfPlayers: temp);
-  }
-
-  bool get isFormValid => playerForm.isValid;
-  late final playerForm = RM.injectForm(
-    autovalidateMode: AutovalidateMode.always,
-    submit: () async {
-      playerAddedEvent(
-        nameTextEdit.text,
-        int.parse(goalTextEdit.text),
-      );
-    },
-  );
-  final nameTextEdit = RM.injectTextEditing(
-    onTextEditing: (textEditing) => print(textEditing),
-  );
-  final goalTextEdit = RM.injectTextEditing(
-    onTextEditing: (textEditing) => print(textEditing),
-    validators: [
-      (goal) {
-        var temp = int.tryParse(goal!);
-        if (temp == null) {
-          return 'ERROR';
-        } else if (temp > 2000) {
-          return '> 2000';
-        } else {
-          return null;
-        }
-      }
-    ],
-  );
-}
-
-enum HomeStatus { loading, loaded }
-
-class HomeState {
-  final HomeStatus homeStatus;
-  final List<Player> listOfPlayers;
-  const HomeState({
-    required this.homeStatus,
-    required this.listOfPlayers,
+  HomeBloc({
+    required this.repo,
   });
 
-  HomeState copyWith({
-    HomeStatus? homeStatus,
-    List<Player>? listOfPlayers,
-  }) {
-    return HomeState(
-      homeStatus: homeStatus ?? this.homeStatus,
-      listOfPlayers: listOfPlayers ?? this.listOfPlayers,
-    );
+  late final _playersRM = RM.inject<Players>(() => repo.players, sideEffects: SideEffects(onSetState: (p0) => repo.players = p0.state));
+
+  Set<Player> get players => _players.players;
+
+  Players get _players => _playersRM.state;
+  set _players(Players val) => _playersRM.state = val;
+
+  void addPlayer(Player player) => _players = _players.copyWith(players: {...players, player});
+  void deletePlayer(Player player) => _players = _players.copyWith(players: {
+        for (var eachPlayer in players)
+          if (eachPlayer != player) eachPlayer
+      });
+
+  bool get valid => playerForm.isValid;
+  late final playerForm = RM.injectForm(
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    submit: () async {
+      final player = Player(name: nameTextEdit.text, goals: int.parse(goalTextEdit.text), status: statusFormField.value);
+      addPlayer(player);
+    },
+  );
+  final nameTextEdit = RM.injectTextEditing();
+  final goalTextEdit = RM.injectTextEditing(validators: [
+    (goal) {
+      var temp = int.tryParse(goal!);
+      if (temp == null) {
+        return 'ERROR';
+      } else if (temp > 2000) {
+        return '> 2000';
+      } else {
+        return null;
+      }
+    }
+  ]);
+  final statusFormField = RM.injectFormField<Status>(Status.common);
+  void changeStatus(Player player) {
+    _players = _players.copyWith(players: {
+      ...players,
+      for (var eachPlayer in players)
+        if (eachPlayer == player)
+          eachPlayer.copyWith(
+            status: statusFormField.value,
+          )
+    });
+    _players = _players;
   }
 }
 
-final HomeBloc home = HomeBloc(playerRepo: PlayerRepository());
+// DEPENDENCY INJECTION
+final HomeBloc home = HomeBloc(
+  repo: PlayerRepository(),
+);
+final playerInterfaceRM = RM.inject<PlayerInterface>(() => PlayerRepository());
+PlayerInterface get playerInterface => playerInterfaceRM.state;
+
+enum Status {
+  common,
+  legend;
+
+  int toMap() => index;
+  static Status fromMap(int map) => Status.values[map];
+}

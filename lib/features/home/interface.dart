@@ -1,7 +1,11 @@
 // import 'package:dartz/dartz.dart';
-import 'models.dart';
+
+import 'models/players.dart';
 
 abstract class PlayerInterface {
-  Future<List<Player>> getPlayers();
-  Future<void> addPlayer(Player player);
+  late Players players;
+  // Future<List<Player>> getPlayers();
+  // Future<void> addPlayer(Player player);
+  // Future<void> deleteAll();
+  // Future<void> delete(Player player);
 }

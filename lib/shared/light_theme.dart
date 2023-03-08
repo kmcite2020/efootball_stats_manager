@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../features/settings/controller.dart';
+import '../features/settings/settings_bloc.dart';
 
 ThemeData get lightTheme => ThemeData(
       listTileTheme: ListTileThemeData(
-        tileColor: settings.materialColor.shade200,
-        selectedTileColor: settings.materialColor.shade400.withAlpha(200),
+        tileColor: settingsBloc.materialColor.shade200,
+        selectedTileColor: settingsBloc.materialColor.shade400.withAlpha(200),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
+        ),
+      ),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(settingsBloc.border)),
+          ),
         ),
       ),
       cardTheme: CardTheme(
-        color: settings.materialColor.shade200,
+        color: settingsBloc.materialColor.shade200,
         elevation: 10,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
         ),
         // margin: EdgeInsets.all(padding),
       ),
@@ -27,54 +35,55 @@ ThemeData get lightTheme => ThemeData(
       // dividerColor: Colors.blue,
       // errorColor: Colors.blue,
       // highlightColor: Colors.blue,
-      scaffoldBackgroundColor: settings.materialColor.shade100,
+      scaffoldBackgroundColor: settingsBloc.materialColor.shade100,
       timePickerTheme: TimePickerThemeData(
-        backgroundColor: settings.materialColor.shade200,
+        backgroundColor: settingsBloc.materialColor.shade200,
         dayPeriodShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
         ),
         hourMinuteShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
         ),
       ),
-      canvasColor: settings.materialColor.shade200,
-      focusColor: settings.materialColor.shade400,
-      hintColor: settings.materialColor,
-      hoverColor: settings.materialColor.shade400,
-      indicatorColor: settings.materialColor,
+      canvasColor: settingsBloc.materialColor.shade200,
+      focusColor: settingsBloc.materialColor.shade400,
+      hintColor: settingsBloc.materialColor,
+      hoverColor: settingsBloc.materialColor.shade400,
+      indicatorColor: settingsBloc.materialColor,
       // primaryColor: color,
-      primaryColorDark: settings.materialColor.shade800,
-      primaryColorLight: settings.materialColor.shade200,
+      primaryColorDark: settingsBloc.materialColor.shade800,
+      primaryColorLight: settingsBloc.materialColor.shade200,
       // primarySwatch: Colors.blue,
-      secondaryHeaderColor: settings.materialColor,
-      shadowColor: settings.materialColor,
-      splashColor: settings.materialColor,
-      unselectedWidgetColor: settings.materialColor.withAlpha(100),
+      secondaryHeaderColor: settingsBloc.materialColor,
+      shadowColor: settingsBloc.materialColor,
+      splashColor: settingsBloc.materialColor,
+      unselectedWidgetColor: settingsBloc.materialColor.withAlpha(100),
       dialogTheme: DialogTheme(
         elevation: 10,
-        backgroundColor: settings.materialColor.shade200,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(settings.borderRadius)),
+        backgroundColor: settingsBloc.materialColor.shade200,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(settingsBloc.border)),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        color: settings.materialColor,
+        color: settingsBloc.materialColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            settings.borderRadius,
+            settingsBloc.border,
           ),
         ),
       ),
-      appBarTheme: AppBarTheme(backgroundColor: settings.materialColor.shade100, elevation: 10, toolbarHeight: settings.appBarHeight),
+      appBarTheme:
+          AppBarTheme(backgroundColor: settingsBloc.materialColor.shade100, elevation: 10, toolbarHeight: settingsBloc.appBarHeight),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: settings.materialColor.shade900,
-          foregroundColor: settings.materialColor.shade100,
+          backgroundColor: settingsBloc.materialColor.shade900,
+          foregroundColor: settingsBloc.materialColor.shade100,
           minimumSize: const Size(100, 40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              settings.borderRadius,
+              settingsBloc.border,
             ),
           ),
         ),
@@ -82,23 +91,23 @@ ThemeData get lightTheme => ThemeData(
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           minimumSize: const Size(100, 40),
-          backgroundColor: settings.materialColor.shade700,
-          foregroundColor: settings.materialColor.shade900,
+          backgroundColor: settingsBloc.materialColor.shade700,
+          foregroundColor: settingsBloc.materialColor.shade900,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              settings.borderRadius,
+              settingsBloc.border,
             ),
           ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          backgroundColor: settings.materialColor.shade800,
+          backgroundColor: settingsBloc.materialColor.shade800,
           minimumSize: const Size(100, 40),
-          foregroundColor: settings.materialColor.shade200,
+          foregroundColor: settingsBloc.materialColor.shade200,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              settings.borderRadius,
+              settingsBloc.border,
             ),
           ),
         ),
@@ -106,58 +115,64 @@ ThemeData get lightTheme => ThemeData(
       inputDecorationTheme: InputDecorationTheme(
         // contentPadding: EdgeInsets.all(18),
         filled: true,
-        fillColor: settings.materialColor.shade200,
-        hoverColor: settings.materialColor.shade600,
-        focusColor: settings.materialColor.shade900,
+        fillColor: settingsBloc.materialColor.shade200,
+        hoverColor: settingsBloc.materialColor.shade600,
+        focusColor: settingsBloc.materialColor.shade900,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(settings.borderRadius),
+          borderRadius: BorderRadius.circular(settingsBloc.border),
         ),
       ),
-      colorSchemeSeed: settings.materialColor,
+      colorSchemeSeed: settingsBloc.materialColor,
 
       brightness: Brightness.light,
       useMaterial3: true,
-      fontFamily: settings.font,
+      fontFamily: GoogleFonts.getFont(settingsBloc.font).fontFamily,
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
+        thumbColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return settingsBloc.materialColor;
+            }
             return null;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return settings.materialColor;
-          }
-          return null;
-        }),
+          },
+        ),
         trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
             return null;
           }
           if (states.contains(MaterialState.selected)) {
-            return settings.materialColor;
+            return settingsBloc.materialColor;
           }
           return null;
         }),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return settingsBloc.materialColor;
+            }
             return null;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return settings.materialColor;
-          }
-          return null;
-        }),
+          },
+        ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return settingsBloc.materialColor;
+            }
             return null;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return settings.materialColor;
-          }
-          return null;
-        }),
+          },
+        ),
       ),
     );

@@ -1,27 +1,38 @@
-import 'dart:convert';
+import 'package:efootball_stats_manager/features/home/models/players.dart';
 
-import '../../shared/shared_preferences.dart';
-import 'failures.dart';
+import '../../shared/initializer_list.dart';
 import 'interface.dart';
-import 'models.dart';
 
 class PlayerRepository implements PlayerInterface {
   @override
-  Future<List<Player>> getPlayers() async {
-    List<Player> list = [];
-    try {
-      if (preferences.getStringList('players') == null) return list;
-      list = preferences.getStringList('players')!.map((e) => Player.fromJson(jsonDecode(e))).toList();
-      return list;
-    } catch (e) {
-      throw PlayerFailure();
-    }
-  }
+  Players get players => Players.fromJson(source.load('players'));
 
   @override
-  Future<void> addPlayer(Player player) async {
-    var temp = <String>[...?preferences.getStringList('key'), jsonEncode(player.toJson())];
-
-    preferences.setStringList('key', temp);
+  set players(Players value) {
+    source.save('players', value.toJson());
   }
+
+  // @override
+  // getPlayers() async {
+  //   source.load('PLAYERS')
+  // }
+
+  // @override
+  // Future<void> addPlayer(Player player) async {
+  //   var temp = <String>[...?preferences.getStringList('key'), jsonEncode(player.toJson())];
+
+  //   preferences.setStringList('key', temp);
+  // }
+
+  // @override
+  // delete(Player player) {
+  //   // TO//DO: implement delete
+  //   throw UnimplementedError();
+  // }
+
+  // @override
+  // deleteAll() {
+  //   // TO//DO: implement deleteAll
+  //   throw UnimplementedError();
+  // }
 }
